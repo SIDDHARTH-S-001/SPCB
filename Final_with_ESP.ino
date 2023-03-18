@@ -103,6 +103,7 @@ void loop() {
     Serial.println(count_pulses_1);
     Serial.println(count_pulses_2);
     int count_variation = count_pulses_1 - count_pulses_2;
+    Serial.println(count_variation);
     int displacement = calc_distance(count_pulses_1, count_pulses_2);
     total_distance = total_distance + displacement;
     Serial.println(total_displacement);
