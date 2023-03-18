@@ -187,5 +187,3 @@ int calc_distance(int count_1, int count_2){
   Serial.println(distance);
   return distance;
 }
-
-int count_variation()
