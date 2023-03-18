@@ -99,9 +99,13 @@ void loop() {
     String dataVal = data.substring(1, data.length());
     String rt = data.substring(0, 1); 
     Serial.println(data); 
-
+  
+    Serial.println(count_pulses_1);
+    Serial.println(count_pulses_2);
+    int count_variation = count_pulses_1 - count_pulses_2;
     int displacement = calc_distance(count_pulses_1, count_pulses_2);
     total_distance = total_distance + displacement;
+    Serial.println(total_displacement);
 
     if (rt == "f"){
       Serial.println("Forward");
