@@ -9,18 +9,18 @@ WiFiClient client;
 WiFiServer server(80);
 String data = "";
 
-#define pwm_1 4
-#define dir_1 23
-#define pwm_2 13
-#define dir_2 25
-#define pwm_3 14
-#define dir_3 17
+#define pwm_1 19
+#define dir_1 18
+#define pwm_2 17
+#define dir_2 16
+#define pwm_3 33
+#define dir_3 25
 int rpm = 0;
 
-#define enc_1_A 5
-#define enc_1_B 18
-#define enc_2_A 35
-#define enc_2_B 34
+#define enc_1_A 36
+#define enc_1_B 39
+#define enc_2_A 34
+#define enc_2_B 35
 unsigned int count_pulses_1 = 0;
 int count_pulses_2 = 0;
 int count_avg = 0;
@@ -31,16 +31,6 @@ int wheel_circumference = 31; // value in cm
 double total_distance = 0.0;
 int total_displacement = 0;
 double displacement=5;
-
-#define trigpin_1 33
-#define echopin_1 32
-int height_1 = 0;
-long duration_1 = 0.0;
-
-#define trigpin_2 27
-#define echopin_2 29
-int height_2 = 0;
-long duration_2 = 0.0;
 
 void setup() {
   // put your setup code here, to run once:
@@ -60,11 +50,6 @@ void setup() {
   pinMode(enc_2_B,INPUT); // sets the Encoder_output_B pin as the input
   attachInterrupt(digitalPinToInterrupt(enc_2_A),DC_Motor_Encoder_2,RISING);
   
-  pinMode(trigpin_1,OUTPUT);
-  pinMode(echopin_1,INPUT);
-  pinMode(trigpin_2,OUTPUT);
-  pinMode(echopin_2,INPUT);
-  
   Serial.begin(115200);
   Serial.println("Connecting to WIFI");
   WiFi.begin(ssid, password);
@@ -79,24 +64,6 @@ void setup() {
 }
 
 void loop() {
-//  digitalWrite(trigpin_1,LOW);
-//  delayMicroseconds(2);
-//  digitalWrite(trigpin_1,HIGH);
-//  delayMicroseconds(10);
-//  duration_1=pulseIn(echopin_1,HIGH);
-//  height_1 =(duration_1/2)*(0.034);
-//  //Serial.println(height_1);
-//  //Serial.print(" cm");
-//
-//  digitalWrite(trigpin_2,LOW);
-//  delayMicroseconds(2);
-//  digitalWrite(trigpin_2,HIGH);
-//  delayMicroseconds(10);
-//  duration_2=pulseIn(echopin_2,HIGH);
-//  height_2=(duration_2/2)*(0.034);
-//  //Serial.println(height_2);
-//  //Serial.print(" cm");
-//
 //  Serial.println(count_pulses_1);
 //  Serial.println(count_pulses_2);
   int count_variation = count_pulses_1 - count_pulses_2;
@@ -137,9 +104,15 @@ void loop() {
     }
      
     else if (rt == "c"){
-      Serial.println("Run Brush");
+      Serial.println("Brush Forward");
       rpm = dataVal.toInt();
       run_brush(rpm);
+    }
+
+    else if (rt == "e"){
+      Serial.println("Brush Reverse");
+      rpm = dataVal.toInt();
+      run_brush_rev(rpm);
     }
 
     else if ((rt == "s")){
@@ -171,14 +144,14 @@ void forward(int rpm){
       analogWrite(pwm_1, rpm);
       digitalWrite(dir_1, HIGH);
       analogWrite(pwm_2, rpm);
-      digitalWrite(dir_2, HIGH);
+      digitalWrite(dir_2, LOW);
 }
 
 void reverse(int rpm){
       analogWrite(pwm_1, rpm);
       digitalWrite(dir_1, LOW);
       analogWrite(pwm_2, rpm);
-      digitalWrite(dir_2, LOW);
+      digitalWrite(dir_2, HIGH);
 }
 
 void brake(){
@@ -189,6 +162,11 @@ void brake(){
 void run_brush(int rpm){
       analogWrite(pwm_3, rpm);
       digitalWrite(dir_3, HIGH);
+}
+
+void run_brush_rev(int rpm){
+      analogWrite(pwm_3, rpm);
+      digitalWrite(dir_3, LOW);
 }
 
 void stop_brush(){
