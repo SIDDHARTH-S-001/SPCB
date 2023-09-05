@@ -45,7 +45,7 @@ void loop() {
     float volt_value = map(analogRead(voltage_pin), 0, 4095, 0, 25);
     speed = 7 * (volt_value / 12);
     Serial.print("Voltage: ");
-    Serial.println(volt_vale);
+    Serial.println(volt_value);
     Serial.print("linear actuator position: ");
     Serial.println(pos);
 
