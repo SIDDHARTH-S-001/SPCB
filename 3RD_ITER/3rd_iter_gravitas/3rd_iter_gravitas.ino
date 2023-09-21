@@ -15,7 +15,11 @@ String data = "";
 #define dir_brush 17
 #define lin_act_1_pwm 33
 #define lin_act_1_dir 32
-#define voltage_pin 19 // Can be used 21, 22
+#define voltage_pin 14 // Can be used 21, 22 : Unused 12, 14, 5, 0, 2, 15
+#define trig_1 21
+#define echo_1 22
+#define trig_2 23
+#define echo_2 19
 // #define lin_act_2_pwm 19
 // #define lin_act_2_dir 23
 
@@ -25,7 +29,10 @@ int speed_pwm = 255;           // pwm value (0-255)
 float reference_volt = 11.0;   // reference voltage for which pwm 255 is calibrated to
 float volt = 0.0;              // voltage reading from voltage sensor
 float volt_scale_factor = 1.0;
+float duration = 0.0;
 int distance = 0;
+int measurement_1 = 0;
+int measurement_2 = 0;
 
 void setup() {
   // put your setup code here, to run once:
@@ -36,9 +43,12 @@ void setup() {
   pinMode(lin_act_1_pwm, OUTPUT);
   pinMode(lin_act_1_dir, OUTPUT); 
   pinMode(voltage_pin, INPUT);
+  pinMode(trig_1,OUTPUT);
+  pinMode(echo_1,INPUT);
+  pinMode(trig_2,OUTPUT);
+  pinMode(echo_2,INPUT);
 // pinMode(lin_act_2_pwm, OUTPUT);
 // pinMode(lin_act_2_dir, OUTPUT);  
-
 
   Serial.begin(115200);
   Serial.println("Connecting to WIFI");
@@ -72,84 +82,99 @@ void loop() {
   String rt = data.substring(0, 1); 
   Serial.println(data); 
 
-  if (rt == "f"){
-    Serial.println("Forward");
-    rpm = dataVal.toInt();
-    forward(rpm);
+  if (measurement_1 < 30){
+    if (measurement_2 < 30){
+      if (rt == "f"){
+        Serial.println("Forward");
+        rpm = dataVal.toInt();
+        forward(rpm);
+      }
+      else if (rt == "r"){
+        Serial.println("Reverse");
+        rpm = dataVal.toInt();
+        reverse(rpm);
+      }
+      else if (rt == "s"){
+        Serial.println("Stop");
+        brake();
+      }
+
+      else if (rt == "c"){
+        Serial.println("Brush Forward");
+        rpm = dataVal.toInt();
+        run_brush(rpm);
+      }
+
+      else if (rt == "e"){
+        Serial.println("Brush Reverse");
+        rpm = dataVal.toInt();
+        run_brush_rev(rpm);
+      }
+
+      else if ((rt == "s")){
+        Serial.println("Stop Brush");
+        stop_brush();
+      }
+
+      if (rt == "l"){
+          Serial.println("Actuator moved to reference 2 cm stroke");
+          distance = dataVal.toInt();  // 20
+          if (pos > distance){
+            move_actr_down(distance);          
+          }
+          else {
+            move_actr_up(distance); 
+          }
+        }
+
+      if (rt == "m"){
+          Serial.println("Actuator moved to 3 cm stroke: No Cleaning");
+          distance = dataVal.toInt();  // 20
+          if (pos > distance){
+              move_actr_down(distance);          
+            }
+            else {
+              move_actr_up(distance); 
+            }
+          }
+
+      if (rt == "n"){
+        Serial.println("Actuator moved to 1.5 cm stroke: Mild Cleaning");
+        distance = dataVal.toInt();  // 20
+          if (pos > distance){
+            move_actr_down(distance);          
+          }
+          else {
+            move_actr_up(distance); 
+          }
+        }
+
+      if (rt == "o"){
+          Serial.println("Actuator moved to 1 cm stroke: Deep Cleaning");
+          distance = dataVal.toInt();  // 20
+          if (pos > distance){
+            move_actr_down(distance);          
+          }
+          else {
+            move_actr_up(distance); 
+          }
+        }
+
+      if (rt == "p"){
+          Serial.println("Linear Stop");
+          lin_stop();
+        }
+
+    }
+    
+    else{
+      brake();
+    }
   }
-  else if (rt == "r"){
-    Serial.println("Reverse");
-    rpm = dataVal.toInt();
-    reverse(rpm);
-  }
-  else if (rt == "s"){
-    Serial.println("Stop");
+
+  else{
     brake();
   }
-
-  else if (rt == "c"){
-    Serial.println("Brush Forward");
-    rpm = dataVal.toInt();
-    run_brush(rpm);
-  }
-
-  else if (rt == "e"){
-    Serial.println("Brush Reverse");
-    rpm = dataVal.toInt();
-    run_brush_rev(rpm);
-  }
-
-  else if ((rt == "s")){
-    Serial.println("Stop Brush");
-    stop_brush();
-  }
-  if (rt == "l"){
-      Serial.println("Actuator moved to reference 2 cm stroke");
-      distance = dataVal.toInt();  // 20
-      if (pos > distance){
-        move_actr_down(distance);          
-      }
-      else {
-        move_actr_up(distance); 
-      }
-    }
-
-  if (rt == "m"){
-      Serial.println("Actuator moved to 3 cm stroke: No Cleaning");
-      distance = dataVal.toInt();  // 20
-      if (pos > distance){
-          move_actr_down(distance);          
-        }
-        else {
-          move_actr_up(distance); 
-        }
-      }
-
-  if (rt == "n"){
-    Serial.println("Actuator moved to 1.5 cm stroke: Mild Cleaning");
-    distance = dataVal.toInt();  // 20
-      if (pos > distance){
-        move_actr_down(distance);          
-      }
-      else {
-        move_actr_up(distance); 
-      }
-    }
-  if (rt == "o"){
-      Serial.println("Actuator moved to 1 cm stroke: Deep Cleaning");
-      distance = dataVal.toInt();  // 20
-      if (pos > distance){
-        move_actr_down(distance);          
-      }
-      else {
-        move_actr_up(distance); 
-      }
-    }
-
-  if (rt == "p"){
-      Serial.println("Linear Stop");
-      lin_stop();
-    }
 }
 
 void forward(int rpm){
@@ -219,6 +244,31 @@ int calc_pwm(float volt){
   // implementation reference voltage = 11V, calculated proportional speed = 6.893 mm/s - corresponds to 255 PWM
   speed_pwm = (11/volt)*(255);
   return speed_pwm;
+}
+
+void ultrasonic(int trigpin, int echopin){
+  if (trigpin == 21){
+  digitalWrite(trigpin,LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigpin,HIGH);
+  delayMicroseconds(10);
+  duration=pulseIn(echopin,HIGH);
+  measurement_1 =(duration/2)*(0.034);
+  Serial.println(measurement_1);
+  Serial.print(" cm");
+  }
+
+  if (trigpin == 23){
+  digitalWrite(trigpin,LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigpin,HIGH);
+  delayMicroseconds(10);
+  duration=pulseIn(echopin,HIGH);
+  measurement_2 =(duration/2)*(0.034);
+  Serial.println(measurement_2);
+  Serial.print(" cm");
+  }
+
 }
 
 String checkClient (void){
