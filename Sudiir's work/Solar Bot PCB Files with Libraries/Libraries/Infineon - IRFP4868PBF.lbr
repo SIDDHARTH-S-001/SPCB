@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE eagle SYSTEM "eagle.dtd">
+<eagle>
+    <drawing>
+        <grid unitdist="mm" unit="mm"/>
+        <layers>
+            <layer name="Top" color="4" number="1" visible="yes" active="yes" fill="1"/>
+            <layer name="Bottom" color="4" number="16" visible="yes" active="yes" fill="1"/>
+            <layer name="tPlace" color="7" number="21" visible="yes" active="yes" fill="1"/>
+            <layer name="bPlace" color="7" number="22" visible="yes" active="yes" fill="1"/>
+            <layer name="tNames" color="7" number="25" visible="yes" active="yes" fill="1"/>
+            <layer name="bNames" color="7" number="26" visible="yes" active="yes" fill="1"/>
+            <layer name="tValues" color="7" number="27" visible="yes" active="yes" fill="1"/>
+            <layer name="bValues" color="7" number="28" visible="yes" active="yes" fill="1"/>
+            <layer name="tStop" color="7" number="29" visible="yes" active="yes" fill="1"/>
+            <layer name="bStop" color="7" number="30" visible="yes" active="yes" fill="1"/>
+            <layer name="tCream" color="7" number="31" visible="yes" active="yes" fill="1"/>
+            <layer name="bCream" color="7" number="32" visible="yes" active="yes" fill="1"/>
+            <layer name="tKeepout" color="4" number="39" visible="yes" active="yes" fill="1"/>
+            <layer name="bKeepout" color="4" number="40" visible="yes" active="yes" fill="1"/>
+            <layer name="tRestrict" color="0" number="41" visible="yes" active="yes" fill="1"/>
+            <layer name="bRestrict" color="0" number="42" visible="yes" active="yes" fill="1"/>
+            <layer name="tDocu" color="7" number="51" visible="yes" active="yes" fill="1"/>
+            <layer name="bDocu" color="7" number="52" visible="yes" active="yes" fill="1"/>
+            <layer name="Nets" color="2" number="91" visible="yes" active="yes" fill="1"/>
+            <layer name="Busses" color="1" number="92" visible="yes" active="yes" fill="1"/>
+            <layer name="Pins" color="2" number="93" visible="yes" active="yes" fill="1"/>
+            <layer name="Symbols" color="4" number="94" visible="yes" active="yes" fill="1"/>
+            <layer name="Names" color="7" number="95" visible="yes" active="yes" fill="1"/>
+            <layer name="Values" color="7" number="96" visible="yes" active="yes" fill="1"/>
+            <layer name="Info" color="7" number="97" visible="yes" active="yes" fill="1"/>
+            <layer name="Guide" color="6" number="98" visible="yes" active="yes" fill="1"/>
+        </layers>
+        <library name="Upverter Library">
+            <description>Upverter Parts Library
+
+Created by Upverter.com</description>
+            <packages>
+                <package name="INFINEON_IRFP4868PBF_0">
+                    <description>Trans MOSFET N-CH 300V 70A 3-Pin(3+Tab) TO-247AC Tube</description>
+                    <wire layer="51" y2="7.935" width="0.15" x2="-2.655" y1="-7.935" x1="-2.655"/>
+                    <wire layer="51" y2="7.935" width="0.15" x2="2.655" y1="7.935" x1="-2.655"/>
+                    <wire layer="51" y2="-7.935" width="0.15" x2="2.655" y1="7.935" x1="2.655"/>
+                    <wire layer="51" y2="-7.935" width="0.15" x2="-2.655" y1="-7.935" x1="2.655"/>
+                    <wire layer="21" y2="7.935" width="0.15" x2="2.655" y1="7.935" x1="-2.655"/>
+                    <wire layer="21" y2="7.935" width="0.15" x2="2.655" y1="-7.935" x1="2.655"/>
+                    <wire layer="21" y2="-7.935" width="0.15" x2="2.655" y1="-7.935" x1="-2.655"/>
+                    <wire layer="21" y2="7.935" width="0.15" x2="-2.655" y1="-7.935" x1="-2.655"/>
+                    <wire layer="39" y2="8.162" width="0.1" x2="-2.755" y1="-8.162" x1="-2.755"/>
+                    <wire layer="39" y2="8.162" width="0.1" x2="2.755" y1="8.162" x1="-2.755"/>
+                    <wire layer="39" y2="-8.162" width="0.1" x2="2.755" y1="8.162" x1="2.755"/>
+                    <wire layer="39" y2="-8.162" width="0.1" x2="-2.755" y1="-8.162" x1="2.755"/>
+                    <text layer="25" align="bottom-left" y="8.385" x="-2.705" rot="R0" size="1.0">&gt;NAME</text>
+                    <pad diameter="2.8" name="1" shape="square" drill="1.85" y="5.46" x="-0.227" rot="R0"/>
+                    <pad diameter="2.8" name="2" shape="round" drill="1.85" y="0.0" x="-0.227" rot="R0"/>
+                    <pad diameter="2.8" name="3" shape="round" drill="1.85" y="-5.46" x="-0.227" rot="R0"/>
+                </package>
+            </packages>
+            <symbols>
+                <symbol name="INFINEON_IRFP4868PBF_0_0">
+                    <description>Trans MOSFET N-CH 300V 70A 3-Pin(3+Tab) TO-247AC Tube</description>
+                    <wire layer="94" y2="-2.54" width="0.508" x2="1.016" y1="-7.62" x1="1.016"/>
+                    <wire layer="94" y2="-2.54" width="0.508" x2="1.778" y1="-3.556" x1="1.778"/>
+                    <wire layer="94" y2="-7.112" width="0.508" x2="5.08" y1="-7.112" x1="1.778"/>
+                    <wire layer="94" y2="-3.048" width="0.508" x2="5.08" y1="-3.048" x1="1.778"/>
+                    <wire layer="94" y2="-5.08" width="0.508" x2="5.08" y1="-5.08" x1="2.54"/>
+                    <wire layer="94" y2="-4.318" width="0.508" x2="3.556" y1="-5.08" x1="2.286"/>
+                    <wire layer="94" y2="-5.842" width="0.508" x2="3.556" y1="-5.08" x1="2.286"/>
+                    <wire layer="94" y2="-5.842" width="0.508" x2="3.556" y1="-4.318" x1="3.556"/>
+                    <wire layer="94" y2="-5.588" width="0.508" x2="3.302" y1="-4.826" x1="3.302"/>
+                    <wire layer="94" y2="-7.62" width="0.508" x2="1.778" y1="-6.604" x1="1.778"/>
+                    <wire layer="94" y2="-5.588" width="0.508" x2="1.778" y1="-4.572" x1="1.778"/>
+                    <wire layer="94" y2="-7.112" width="0.508" x2="6.858" y1="-7.112" x1="5.08"/>
+                    <wire layer="94" y2="-3.048" width="0.508" x2="6.858" y1="-7.112" x1="6.858"/>
+                    <wire layer="94" y2="-3.048" width="0.508" x2="5.08" y1="-3.048" x1="6.858"/>
+                    <wire layer="94" y2="-5.588" width="0.508" x2="6.35" y1="-4.572" x1="6.858"/>
+                    <wire layer="94" y2="-5.588" width="0.508" x2="7.366" y1="-5.588" x1="6.35"/>
+                    <wire layer="94" y2="-4.572" width="0.508" x2="6.858" y1="-5.588" x1="7.366"/>
+                    <wire layer="94" y2="-4.572" width="0.508" x2="7.366" y1="-4.572" x1="6.858"/>
+                    <wire layer="94" y2="-4.318" width="0.508" x2="7.62" y1="-4.572" x1="7.366"/>
+                    <wire layer="94" y2="-4.572" width="0.508" x2="6.35" y1="-4.572" x1="6.858"/>
+                    <wire layer="94" y2="-4.826" width="0.508" x2="6.096" y1="-4.572" x1="6.35"/>
+                    <wire layer="94" y2="-5.08" width="0.15" x2="1.016" y1="-5.08" x1="0.0"/>
+                    <wire layer="94" y2="-5.08" width="0.15" x2="5.08" y1="-5.08" x1="5.08"/>
+                    <wire layer="94" y2="-3.048" width="0.15" x2="5.08" y1="-2.54" x1="5.08"/>
+                    <text layer="95" align="top-left" y="-2.54" x="10.922" rot="R0" size="2.54">&gt;NAME</text>
+                    <text layer="95" align="top-left" y="-5.334" x="10.922" rot="R0" size="2.54">IRFP4868PBF</text>
+                    <pin direction="pas" name="G" visible="pad" length="middle" y="-5.08" x="-5.08"/>
+                    <pin direction="pas" name="S" visible="pad" length="middle" y="-10.16" x="5.08" rot="R90"/>
+                    <pin direction="pas" name="D" visible="pad" length="middle" y="2.54" x="5.08" rot="R270"/>
+                    <circle y="-3.048" x="5.08" layer="94" radius="0.254" width="0.254"/>
+                    <circle y="-7.112" x="5.08" layer="94" radius="0.254" width="0.254"/>
+                </symbol>
+            </symbols>
+            <devicesets>
+                <deviceset prefix="Q" name="INFINEON_IRFP4868PBF">
+                    <description>Trans MOSFET N-CH 300V 70A 3-Pin(3+Tab) TO-247AC Tube</description>
+                    <gates>
+                        <gate name="G$0" symbol="INFINEON_IRFP4868PBF_0_0" x="0"/>
+                    </gates>
+                    <devices>
+                        <device name="INFINEON_IRFP4868PBF_0_0" package="INFINEON_IRFP4868PBF_0">
+                            <connects>
+                                <connect gate="G$0" pad="1" pin="G"/>
+                                <connect gate="G$0" pad="2" pin="D"/>
+                                <connect gate="G$0" pad="3" pin="S"/>
+                            </connects>
+                            <technologies>
+                                <technology>
+                                    <attribute name="mouser_part_number" value="942-IRFP4868PBF"/>
+                                    <attribute name="turn_on_delay_time" value="24ns"/>
+                                    <attribute name="mfg_package_ident_rev" value="901"/>
+                                    <attribute name="max_junction_temp" value="+175°C"/>
+                                    <attribute name="temperature_range_high" value="+175°C"/>
+                                    <attribute name="MPN" value="IRFP4868PBF"/>
+                                    <attribute name="gate_to_source_voltage" value="20V"/>
+                                    <attribute name="digikey_description" value="TRANS MOSFET N-CH 300V 70A TO-247AC"/>
+                                    <attribute name="device_class_L3" value="MOSFETs"/>
+                                    <attribute name="device_class_L1" value="Discrete Semiconductors"/>
+                                    <attribute name="digikey_part_number" value="IRFP4868PBF-ND"/>
+                                    <attribute name="prefix" value="Q"/>
+                                    <attribute name="drain_to_source_resistance" value="25.5mΩ"/>
+                                    <attribute name="verification_version" value="0.0.0.1"/>
+                                    <attribute name="drain_to_source_voltage" value="300V"/>
+                                    <attribute name="datasheet" value="https://www.infineon.com/dgdl/Infineon-IRFP4868-DS-v01_02-EN.pdf?fileId=5546d462533600a40153562c9c822023"/>
+                                    <attribute name="threshold_vgs" value="3-5V"/>
+                                    <attribute name="turn_off_delay_time" value="62ns"/>
+                                    <attribute name="power_dissipation" value="517W"/>
+                                    <attribute name="footprint_url" value="https://www.infineon.com/dgdl/Infineon-PG-TO247-3-901-P-v01_00-EN.pdf?fileId=5546d46261ff5777016224bd45491aea"/>
+                                    <attribute name="technology" value="MOSFET"/>
+                                    <attribute name="lead_free" value="yes"/>
+                                    <attribute name="height" value="24.99mm"/>
+                                    <attribute name="number_of_N_channels" value="1"/>
+                                    <attribute name="mfg_package_ident" value="PG-TO247-3"/>
+                                    <attribute name="drain_to_source_breakdown_voltage" value="300V"/>
+                                    <attribute name="device_class_L2" value="Transistors"/>
+                                    <attribute name="continuous_drain_current" value="70A"/>
+                                    <attribute name="input_capacitace_at_vds" value="10774pF @ 50V"/>
+                                    <attribute name="temperature_range_low" value="-55°C"/>
+                                    <attribute name="rohs" value="yes"/>
+                                    <attribute name="centroid_not_specified" value="No"/>
+                                    <attribute name="standoff_height" value="3.71mm"/>
+                                    <attribute name="mfg_package_ident_date" value="0"/>
+                                    <attribute name="number_of_channels" value="1"/>
+                                    <attribute name="MF" value="Infineon"/>
+                                    <attribute name="package" value="TO-247AC"/>
+                                </technology>
+                            </technologies>
+                        </device>
+                    </devices>
+                </deviceset>
+            </devicesets>
+        </library>
+    </drawing>
+</eagle>
