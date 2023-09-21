@@ -9,6 +9,7 @@ WiFiClient client;
 WiFiServer server(80);
 String data = "";
 
+// Pins
 #define pwm_drive 16
 #define dir_drive 13
 #define pwm_brush 18
@@ -23,6 +24,7 @@ String data = "";
 // #define lin_act_2_pwm 19
 // #define lin_act_2_dir 23
 
+// Variables
 int rpm = 0;
 int pos = 0;                   // in (mm)
 int speed_pwm = 255;           // pwm value (0-255)
@@ -30,12 +32,14 @@ float reference_volt = 11.0;   // reference voltage for which pwm 255 is calibra
 float volt = 0.0;              // voltage reading from voltage sensor
 float volt_scale_factor = 1.0;
 float duration = 0.0;
-int distance = 0;
+int new_pos = 0;
+int dist = 0;
 int measurement_1 = 0;
 int measurement_2 = 0;
 
 void setup() {
   // put your setup code here, to run once:
+  // Set Pinmodes
   pinMode(dir_drive, OUTPUT);
   pinMode(pwm_drive, OUTPUT);
   pinMode(dir_brush, OUTPUT);
@@ -50,6 +54,7 @@ void setup() {
 // pinMode(lin_act_2_pwm, OUTPUT);
 // pinMode(lin_act_2_dir, OUTPUT);  
 
+  // Start Serial communication and WiFi connection
   Serial.begin(115200);
   Serial.println("Connecting to WIFI");
   WiFi.begin(ssid, password);
@@ -58,8 +63,8 @@ void setup() {
     Serial.print("...");
   }
   Serial.println("WiFi connected");
-  Serial.println("ESP32 Local IP is : ");
-  Serial.print((WiFi.localIP()));
+  Serial.println("ESP32 Local IP is : ");  
+  Serial.print((WiFi.localIP()));           // IP address of nodemcu (server) - should be enterer in the app (IP Textbox)
   server.begin();
 
 }
@@ -68,7 +73,7 @@ void loop() {
   // put your main code here, to run repeatedly:
   // int volt = analogRead(v_sensor);
   // float volt = map(analogRead(voltage_pin), 0, 4096, 0, 25);
-  volt = map(analogRead(voltage_pin), 0, 4095, 0, 25);
+  volt = map(analogRead(voltage_pin), 0, 4095, 0, 25); 
   volt = volt * volt_scale_factor;
   speed_pwm = (volt/reference_volt)*255;
 
@@ -118,45 +123,51 @@ void loop() {
 
       if (rt == "l"){
           Serial.println("Actuator moved to reference 2 cm stroke");
-          distance = dataVal.toInt();  // 20
-          if (pos > distance){
-            move_actr_down(distance);          
+          new_pos = dataVal.toInt();  // 20
+          if (pos > new_pos){
+            move_actr_down(dist);          
           }
           else {
-            move_actr_up(distance); 
+            move_actr_up(dist); 
           }
         }
 
       if (rt == "m"){
           Serial.println("Actuator moved to 3 cm stroke: No Cleaning");
-          distance = dataVal.toInt();  // 20
-          if (pos > distance){
-              move_actr_down(distance);          
+          new_pos = dataVal.toInt();  // 20
+          if (pos > new_pos){         // m30
+              dist = pos - new_pos;
+              move_actr_down(dist);          
             }
-            else {
-              move_actr_up(distance); 
+          else {
+              dist = new_pos - pos;
+              move_actr_up(dist); 
             }
           }
 
       if (rt == "n"){
         Serial.println("Actuator moved to 1.5 cm stroke: Mild Cleaning");
-        distance = dataVal.toInt();  // 20
-          if (pos > distance){
-            move_actr_down(distance);          
+        new_pos = dataVal.toInt();  // 20
+          if (pos > new_pos){
+           dist = pos - new_pos;
+            move_actr_down(dist);          
           }
           else {
-            move_actr_up(distance); 
+            dist = new_pos - pos;
+            move_actr_up(dist); 
           }
         }
 
       if (rt == "o"){
           Serial.println("Actuator moved to 1 cm stroke: Deep Cleaning");
-          distance = dataVal.toInt();  // 20
-          if (pos > distance){
-            move_actr_down(distance);          
+          new_pos = dataVal.toInt();  // 20
+          if (pos > new_pos){
+            dist = pos - new_pos;
+            move_actr_down(dist);          
           }
           else {
-            move_actr_up(distance); 
+            dist = new_pos - pos;
+            move_actr_up(dist); 
           }
         }
 
@@ -205,16 +216,16 @@ void stop_brush(){
       analogWrite(pwm_brush, 0);
 }
 
-void move_actr_up(int distance){
+void move_actr_up(int dist){
   Serial.print("moving up ");
-  pos = pos + distance;
-  lin_inc(calc_time(distance));
+  pos = pos + dist;
+  lin_inc(calc_time(dist));
 }
 
-void move_actr_down(int distance){
+void move_actr_down(int dist){
   Serial.print("moving down ");
-  pos = pos - distance;
-  lin_dec(calc_time(distance));
+  pos = pos - dist;
+  lin_dec(calc_time(dist));
 }
 
 void lin_inc(int dly){
@@ -235,8 +246,8 @@ void lin_stop(){
   analogWrite(lin_act_1_pwm, 0);
 }
 
-int calc_time(int distance){
-  return (int)(1000*distance/8.359);
+int calc_time(int dist){
+  return (int)(1000*dist/8.359);
 }
 
 int calc_pwm(float volt){
