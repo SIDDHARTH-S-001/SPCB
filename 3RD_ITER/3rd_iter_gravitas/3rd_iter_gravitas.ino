@@ -73,9 +73,12 @@ void loop() {
   // put your main code here, to run repeatedly:
   // int volt = analogRead(v_sensor);
   // float volt = map(analogRead(voltage_pin), 0, 4096, 0, 25);
-  volt = map(analogRead(voltage_pin), 0, 4095, 0, 25); 
-  volt = volt * volt_scale_factor;
-  speed_pwm = (volt/reference_volt)*255;
+  // volt = map(analogRead(voltage_pin), 0, 4095, 0, 25); 
+  // volt = volt * volt_scale_factor;
+  volt = 13.3;
+  speed_pwm = calc_pwm(volt);
+
+  // Serial.println(volt);
 
   client = server.available();
   if (!client){
@@ -125,9 +128,11 @@ void loop() {
           Serial.println("Actuator moved to reference 2 cm stroke");
           new_pos = dataVal.toInt();  // 20
           if (pos > new_pos){
+            dist = pos - new_pos;
             move_actr_down(dist);          
           }
           else {
+            dist = new_pos - pos;
             move_actr_up(dist); 
           }
         }
@@ -230,14 +235,14 @@ void move_actr_down(int dist){
 
 void lin_inc(int dly){
   analogWrite(lin_act_1_pwm, speed_pwm);
-  digitalWrite(lin_act_1_dir, HIGH);
+  digitalWrite(lin_act_1_dir, LOW);
   delay(dly);
   lin_stop();
 }
 
 void lin_dec(int dly){
   analogWrite(lin_act_1_pwm, speed_pwm);
-  digitalWrite(lin_act_1_dir, LOW);
+  digitalWrite(lin_act_1_dir, HIGH);
   delay(dly);
   lin_stop();
 }
@@ -247,7 +252,7 @@ void lin_stop(){
 }
 
 int calc_time(int dist){
-  return (int)(1000*dist/8.359);
+  return (int)(1000*dist/6.893);
 }
 
 int calc_pwm(float volt){
