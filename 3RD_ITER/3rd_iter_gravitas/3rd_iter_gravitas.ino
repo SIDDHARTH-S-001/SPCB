@@ -28,16 +28,18 @@ String data = "";
 
 // Variables
 int rpm = 0;
-int pos = 0;                 // in (mm)
-int speed_pwm = 255;          // pwm value (0-255)
-float reference_volt = 11.0;  // reference voltage for which pwm 255 is calibrated to
-float volt = 0.0;             // voltage reading from voltage sensor
-float volt_scale_factor = 1.0;
-float duration = 0.0;
-int new_pos = 0;
-int dist = 0;
-int measurement_1 = 0;
-int measurement_2 = 0;
+int pos = 0;                   // linear acturator current position in (mm)
+int new_pos = 0;               // Desired new position - set from APP (options: reference (20 mm), lift (30 mm), 
+                               // clean (15 mm), deep clean (10 mm))
+int dist = 0;                  // dist = difference between pos and new_pos  
+int linear_actr_pwm = 255;     // pwm value (0-255)
+float reference_volt = 11.0;   // reference voltage for which pwm 255 is calibrated to
+float volt = 0.0;              // voltage reading from voltage sensor
+float volt_scale_factor = 1.0; // voltage scale factor = V_multimeter/V_sensor
+float duration_1 = 0.0;        // time of flight - ultrasonic sensor 1              
+float duration_2 = 0.0;        // time of flight - ultrasonic sensor 2
+int measurement_1 = 0;         // distance reading from ultrasonic sensor 1
+int measurement_2 = 0;         // distance reading from ultrasonic sensor 2
 
 void setup() {
   // put your setup code here, to run once:
@@ -77,7 +79,10 @@ void loop() {
   // volt = map(analogRead(voltage_pin), 0, 4095, 0, 25);
   // volt = volt * volt_scale_factor;
   volt = 13.3;
-  speed_pwm = calc_pwm(volt);
+  linear_actr_pwm = calc_pwm(volt);
+
+  measurement_1 = ultrasonic_1();
+  measurement_2 = ultrasonic_2();
 
   // Serial.println(volt);
 
@@ -176,6 +181,7 @@ void loop() {
     Serial.println("Linear Stop");
     lin_stop();
   }
+  client.stop();
 }
 
 void forward(int rpm) {
@@ -220,14 +226,14 @@ void move_actr_down(int dist) {
 }
 
 void lin_inc(int dly) {
-  analogWrite(lin_act_1_pwm, speed_pwm);
+  analogWrite(lin_act_1_pwm, linear_actr_pwm);
   digitalWrite(lin_act_1_dir, LOW);
   delay(dly);
   lin_stop();
 }
 
 void lin_dec(int dly) {
-  analogWrite(lin_act_1_pwm, speed_pwm);
+  analogWrite(lin_act_1_pwm, linear_actr_pwm);
   digitalWrite(lin_act_1_dir, HIGH);
   delay(dly);
   lin_stop();
@@ -244,32 +250,34 @@ int calc_time(int dist) {
 int calc_pwm(float volt) {
   // Calibration reference voltage = 13.34V, measured speed = 8.359 mm/s
   // implementation reference voltage = 11V, calculated proportional speed = 6.893 mm/s - corresponds to 255 PWM
-  speed_pwm = (11 / volt) * (255);
-  return speed_pwm;
+  linear_actr_pwm = (11 / volt) * (255);
+  return linear_actr_pwm;
 }
 
-void ultrasonic(int trigpin, int echopin) {
-  if (trigpin == 21) {
-    digitalWrite(trigpin, LOW);
+int ultrasonic_1() {
+    digitalWrite(trig_1, LOW);
     delayMicroseconds(2);
-    digitalWrite(trigpin, HIGH);
+    digitalWrite(trig_1, HIGH);
     delayMicroseconds(10);
-    duration = pulseIn(echopin, HIGH);
-    measurement_1 = (duration / 2) * (0.034);
-    Serial.println(measurement_1);
-    Serial.print(" cm");
-  }
+    duration_1 = pulseIn(echo_1, HIGH);
+    measurement_1 = (duration_1 / 2) * (0.034);
+    Serial.print("Ultrasonic 1: ");
+    Serial.print(measurement_1);
+    Serial.println(" cm");
+    return measurement_1;
+}
 
-  if (trigpin == 23) {
-    digitalWrite(trigpin, LOW);
+int ultrasonic_2(){
+    digitalWrite(trig_2, LOW);
     delayMicroseconds(2);
-    digitalWrite(trigpin, HIGH);
+    digitalWrite(trig_2, HIGH);
     delayMicroseconds(10);
-    duration = pulseIn(echopin, HIGH);
-    measurement_2 = (duration / 2) * (0.034);
-    Serial.println(measurement_2);
-    Serial.print(" cm");
-  }
+    duration_2 = pulseIn(echo_2, HIGH);
+    measurement_2 = (duration_2 / 2) * (0.034);
+    Serial.print("Ultrasonic 2: ");
+    Serial.print(measurement_2);
+    Serial.println(" cm");
+    return measurement_2;
 }
 
 String checkClient(void) {
